@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
 const userSchema = new Schema({
@@ -18,9 +18,9 @@ const userSchema = new Schema({
     validate: {
       validator: function (v) {
         console.log("v====",v)
-        return /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{6,}$/.test(v);
+        return v.length >= 6;
       },
-      message: "Password length should be at least 6 characters, min 1 number and 1 special character!"
+      message: "Password length should be at least 6 characters"
     }
   },
   fbId:String,

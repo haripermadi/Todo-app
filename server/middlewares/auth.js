@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/user')
-require('dotenv').load();
+const secret = process.env.SECRET
 
 module.exports={
   authUser : function(req,res,next){
@@ -9,7 +8,7 @@ module.exports={
     if(token){
       try{
       
-        let decoded = jwt.verify(token,'secret')
+        let decoded = jwt.verify(token, secret)
         next()
       }
       catch(err){

@@ -26,11 +26,20 @@
             </div>
             <div class="form-group">
               <label for="email" class="col-form-label">Email:</label>
-              <input type="text" class="form-control" v-model="objNewuser.email" placeholder="email...">
+              <p :class="{ 'control': true }">
+                <input v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" class="form-control" v-model="objNewuser.email" placeholder="Email">
+                <span v-show="errors.has('email')" class="help text-danger">{{ errors.first('email') }}</span>
+              </p>
+              <!-- <input type="text" class="form-control" v-model="objNewuser.email" placeholder="email..."> -->
             </div>
             <div class="form-group">
               <label for="password" class="col-form-label">Password:</label>
-              <input type="password" class="form-control" v-model="objNewuser.password" placeholder="password...">
+               <p class="control has-icon has-icon-right">
+                <input name="password" v-validate="'required|min:6'" :class="{'input': true, 'is-danger': errors.has('password') }" type="password" class="form-control" v-model="objNewuser.password"  placeholder="Password">
+                <i v-show="errors.has('password')" class="fa fa-warning"></i>
+                <span v-show="errors.has('password')" class="help text-danger">{{ errors.first('password') }}</span>
+            </p>
+              <!-- <input type="password" class="form-control" v-model="objNewuser.password" placeholder="password..."> -->
             </div>
           </form>
         </div>
@@ -94,7 +103,9 @@ export default {
       this.$store.dispatch('signUp', this.objNewuser)
     },
     signInButton: function () {
-      this.$store.dispatch('signIn', this.objUser)
+      this.$store.dispatch('signIn', this.objUser).then(() => {
+        this.$router.push({path: '/home'})
+      })
     }
   }
 

@@ -20,4 +20,8 @@ export default {
 nav {
   background: rgba(white, white, white, 0.5)
 }
+a {
+  color: white !important;
+  font-weight: bold;
+}
 </style>

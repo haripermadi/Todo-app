@@ -1,10 +1,10 @@
 const User = require('../models/user')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 const jwt = require('jsonwebtoken');
 const FB  = require('fb')
-
+const secret = process.env.SECRET
 
 module.exports={
   signUp:(req,res)=>{
@@ -58,7 +58,7 @@ module.exports={
         console.log("ini data user===",dataUser)
         let checkPass = bcrypt.compareSync(req.body.password,dataUser.password)
         if(checkPass){
-          let token = jwt.sign({id:dataUser._id,email:dataUser.email},'secret')
+          let token = jwt.sign({id:dataUser._id,email:dataUser.email}, secret)
           res.status(200).json({
             message:"login success",
             data:{
@@ -83,7 +83,7 @@ module.exports={
 
   },
   signInFb : (req,res)=>{
-    FB.api('me',{fields:['id','name','email', 'picture'],access_token:req.headers.fb_token},(userFbToken)=>{
+    FB.api('me',{fields:['id','name','email'],access_token:req.headers.fb_token},(userFbToken)=>{
       if(userFbToken){
         User.findOne({
           email:userFbToken.email,
@@ -97,10 +97,9 @@ module.exports={
               email:userFbToken.email,
               password: null,
               fbId : userFbToken.id,
-              picture: response.picture.data.url
             },(err,newUser)=>{
               if(!err){
-                let token = jwt.sign({id:newUser._id},'secret')
+                let token = jwt.sign({id:newUser._id}, secret)
                 res.status(200).json({
                 message:"login with facebook success",
                 data: ({
@@ -108,7 +107,6 @@ module.exports={
                   fbId : newUser.fbId,
                   name:newUser.name,
                   email: newUser.email,
-                  picture: newUser.picture,
                   token:token
                 })
               })
@@ -119,7 +117,7 @@ module.exports={
               }
             })
           }else{
-            let token = jwt.sign({id:user._id},'secret')
+            let token = jwt.sign({id:user._id}, secret)
             res.status(200).json({
               message:"login with facebook success",
               data: ({
@@ -127,7 +125,6 @@ module.exports={
                 fbId : user.fbId,
                 name:user.name,
                 email: user.email,
-                picture: user.picture,
                 token:token
               })
             })
