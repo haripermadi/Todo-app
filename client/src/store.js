@@ -119,6 +119,7 @@ const store = new Vuex.Store({
         }
       }).then(function (response) {
         console.log('respon delete todo', response)
+        context.dispatch('showAllTodo')
       }).catch(function (err) {
         console.log(err)
       })
@@ -133,6 +134,7 @@ const store = new Vuex.Store({
         data: payload
       }).then(function (response) {
         console.log('respon completetodo', JSON.stringify(response))
+        context.dispatch('showAllTodo')
       }).catch(function (err) {
         console.log(err)
       })
@@ -147,6 +149,22 @@ const store = new Vuex.Store({
         data: payload
       }).then(function (response) {
         console.log('respon uncompletetodo', response)
+        context.dispatch('showAllTodo')
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
+    editTodo: function (context, payload) {
+      axios({
+        method: 'put',
+        url: `http://localhost:3000/todo/${payload._id}`,
+        headers: {
+          token: context.state.activeUser.token
+        },
+        data: payload
+      }).then(function (response) {
+        console.log('respon edit todo', response)
+        context.dispatch('showAllTodo')
       }).catch(function (err) {
         console.log(err)
       })

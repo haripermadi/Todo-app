@@ -23,17 +23,37 @@
         </div>
       </div>
     </div>
-      <!-- <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-secondary">All</button>
-        <button type="button" class="btn btn-secondary">Uncomplete</button>
-        <button type="button" class="btn btn-secondary">Completed</button>
-      </div> -->
     <div class="jumbotron">
       <div class="list-group" v-for="(todo, i) in todoList" :key="i">
-        <div v-if="todo.status === false" class="list-group-item list-group-item-action list-group-item-dark" id="uncompleted"><span class="icon" @click="completedTodo(todo)"><i class="far fa-square"></i></span> {{todo.task}} <span class="removeTag" @click="deleteTodo(todo)"><i class="far fa-trash-alt"></i></span></div>
-        <div v-else class="list-group-item list-group-item-action list-group-item-dark" id="completed"><span class="icon" @click="uncompletedTodo(todo)"><i class="far fa-check-square"></i></span> {{todo.task}} <span class="removeTag" @click="deleteTodo(todo)"><i class="far fa-trash-alt"></i></span></div>
+        <div v-if="todo.status === false" class="list-group-item list-group-item-action list-group-item-dark" id="uncompleted"><span class="icon" @click="completedTodo(todo)"><i class="far fa-square"></i></span> {{todo.task}} <span class="removeTag" @click="deleteTodo(todo)"><i class="far fa-trash-alt"></i></span><span class="editTag" data-toggle="modal" data-target="#myModal" @click="getEditTodo(todo)"><i class="far fa-edit"></i></span></div>
+        <div v-else class="list-group-item list-group-item-action list-group-item-dark" id="completed"><span class="icon" @click="uncompletedTodo(todo)"><i class="far fa-check-square"></i></span> {{todo.task}} <span class="removeTag" @click="deleteTodo(todo)"><i class="far fa-trash-alt"></i></span><span class="editTag" data-toggle="modal" data-target="#myModal" @click="getEditTodo(todo)"><i class="far fa-edit"></i></span></div>
       </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Todo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="todo" class="col-form-label">Edit your todo</label>
+              <input type="text" class="form-control" v-model="editTodo.task">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" @click="editTodoList">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -47,7 +67,8 @@ export default {
   },
   data () {
     return {
-      task: ''
+      task: '',
+      editTodo: {}
     }
   },
   created: function () {
@@ -69,18 +90,19 @@ export default {
       })
     },
     completedTodo: function (todo) {
-      this.$store.dispatch('completedTodo', todo).then(() => {
-        // this.$store.dispatch('showAllTodo')
-        location.reload()
-      })
+      this.$store.dispatch('completedTodo', todo)
     },
     uncompletedTodo: function (todo) {
       this.$store.dispatch('uncompleteTodo', todo)
     },
     deleteTodo: function (todo) {
-      this.$store.dispatch('deleteTodo', todo).then(() => {
-        location.reload()
-      })
+      this.$store.dispatch('deleteTodo', todo)
+    },
+    getEditTodo: function (todo) {
+      this.editTodo = todo
+    },
+    editTodoList: function () {
+      this.$store.dispatch('editTodo', this.editTodo)
     }
   }
 }
@@ -112,6 +134,9 @@ input {
 .list-group-item {
   color: blue !important;
   text-align: left !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 #quoteid{
   max-width: 1000px;
@@ -138,6 +163,11 @@ input {
 .removeTag{
   position: absolute;
   right: 40px;
+  cursor: pointer;
+}
+.editTag{
+  position: absolute;
+  right: 10px;
   cursor: pointer;
 }
 
