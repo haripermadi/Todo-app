@@ -29,17 +29,9 @@
         <button type="button" class="btn btn-secondary">Completed</button>
       </div> -->
     <div class="jumbotron">
-      <div class="list-group rows" v-for="(todo, i) in todoList" :key="i">
-        <div  v-if="todo.status === false">
-          <div class="col-md-10 list-group-item list-group-item-action list-group-item-dark" id="uncompleted"><span class="icon" @click="completedTodo(todo)"><i class="far fa-square"></i></span> {{todo.task}}</div>
-        </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-warning">Edit</button>
-          <button type="button" class="btn btn-danger">Delete</button>
-        </div>
-        <div class="col-md-10" v-else>
-          <div class="list-group-item list-group-item-action list-group-item-dark" id="completed"><span class="icon" @click="uncompletedTodo(todo)"><i class="far fa-check-square"></i></span> {{todo.task}}</div>
-        </div>
+      <div class="list-group" v-for="(todo, i) in todoList" :key="i">
+        <div v-if="todo.status === false" class="list-group-item list-group-item-action list-group-item-dark" id="uncompleted"><span class="icon" @click="completedTodo(todo)"><i class="far fa-square"></i></span> {{todo.task}} <span class="removeTag" @click="deleteTodo(todo)"><i class="far fa-trash-alt"></i></span></div>
+        <div v-else class="list-group-item list-group-item-action list-group-item-dark" id="completed"><span class="icon" @click="uncompletedTodo(todo)"><i class="far fa-check-square"></i></span> {{todo.task}} <span class="removeTag" @click="deleteTodo(todo)"><i class="far fa-trash-alt"></i></span></div>
       </div>
     </div>
   </div>
@@ -79,10 +71,16 @@ export default {
     completedTodo: function (todo) {
       this.$store.dispatch('completedTodo', todo).then(() => {
         // this.$store.dispatch('showAllTodo')
+        location.reload()
       })
     },
     uncompletedTodo: function (todo) {
       this.$store.dispatch('uncompleteTodo', todo)
+    },
+    deleteTodo: function (todo) {
+      this.$store.dispatch('deleteTodo', todo).then(() => {
+        location.reload()
+      })
     }
   }
 }
@@ -136,7 +134,11 @@ input {
 
 .icon {
   cursor: pointer;
-
+}
+.removeTag{
+  position: absolute;
+  right: 40px;
+  cursor: pointer;
 }
 
 </style>

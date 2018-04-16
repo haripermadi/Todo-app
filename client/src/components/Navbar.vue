@@ -3,7 +3,7 @@
   <a class="navbar-brand">DoDo</a>
   <form class="form-inline">
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-danger">
+    <button type="button" class="btn btn-danger" @click="logOutButton">
       Log Out
     </button>
   </form>
@@ -12,7 +12,16 @@
 
 <script>
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  methods: {
+    logOutButton: function () {
+      let check = confirm('log out?')
+      if (check === true) {
+        localStorage.clear()
+        this.$router.push({path: '/'})
+      }
+    }
+  }
 }
 </script>
 
