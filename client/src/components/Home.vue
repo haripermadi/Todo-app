@@ -152,9 +152,7 @@ input {
 
 #completed {
   text-decoration: line-through;
-  color: firebrick;
-}
-#uncompleted {
+  color: firebrick !important;
 }
 
 .icon {

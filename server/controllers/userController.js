@@ -8,11 +8,11 @@ const secret = process.env.SECRET
 
 module.exports={
   signUp:(req,res)=>{
-    // let hash = bcrypt.hashSync(req.body.password,salt)
+    let hash = bcrypt.hashSync(req.body.password,salt)
     let newUser ={
       name:req.body.name,
       email:req.body.email,
-      password:req.body.password
+      password: hash
     }
     User.findOne({
       email:req.body.email
@@ -23,12 +23,19 @@ module.exports={
         })
       }else{
         let user = new User(newUser)
-        user.save().then(user=>{
-          console.log("===>",user)
-          if(user){
+        user.save().then(dataUser=>{
+          console.log("===>",dataUser)
+          if(dataUser){
+            let token = jwt.sign({id:dataUser._id,email:dataUser.email}, secret)
             res.status(201).json({
               message:"user is created",
-              user
+              data:{
+                id:dataUser._id,
+                name:dataUser.name,
+                email:dataUser.email,
+                fbId :null,
+                token :token
+              }
             })
           }else{
             res.status(406).json({
@@ -83,7 +90,8 @@ module.exports={
 
   },
   signInFb : (req,res)=>{
-    FB.api('me',{fields:['id','name','email'],access_token:req.headers.fb_token},(userFbToken)=>{
+    FB.api('me',{fields:['id','name','email'],access_token:req.headers.fbtoken},(userFbToken)=>{
+      console.log('sign in fb', userFbToken)
       if(userFbToken){
         User.findOne({
           email:userFbToken.email,
@@ -91,30 +99,40 @@ module.exports={
         })
         .exec()
         .then(user=>{
+          console.log('user ada==', user)
           if(user == null){
-            User.create({
-              name:userFbToken.name,
-              email:userFbToken.email,
+            console.log('masuk user create', userFbToken)
+            let newUser ={
+              name: userFbToken.name,
+              email: userFbToken.email,
               password: null,
               fbId : userFbToken.id,
-            },(err,newUser)=>{
-              if(!err){
-                let token = jwt.sign({id:newUser._id}, secret)
+            }
+            let fbuser = new User(newUser)
+            fbuser.save().then(dataNewUser => {
+              console.log('new user fb==', dataNewUser)
+              if(dataNewUser) {
+                let token = jwt.sign({id: dataNewUser._id}, secret)
                 res.status(200).json({
-                message:"login with facebook success",
-                data: ({
-                  _id: newUser._id,
-                  fbId : newUser.fbId,
-                  name:newUser.name,
-                  email: newUser.email,
-                  token:token
+                  message:"login with facebook success",
+                  data: ({
+                    _id: dataNewUser._id,
+                    fbId : dataNewUser.fbId,
+                    name: dataNewUser.name,
+                    email: dataNewUser.email,
+                    token:token
+                  })
                 })
-              })
               }else{
                 res.status(400).json({
                   message:"something wrong"
                 })
               }
+            }).catch(error => {
+              res.status(400).json({
+                message:"error",
+                error
+              })
             })
           }else{
             let token = jwt.sign({id:user._id}, secret)

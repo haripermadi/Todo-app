@@ -1,13 +1,16 @@
 <template>
 <div>
-  <h1><span><i class="fas fa-clipboard-list"></i></span> DoDo</h1>
-  <p>Do what you should Do with DoDO!</p>
-  <div class="jumbotron">
-    <div class="container"><button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#signUpModal">Sign Up</button></div>
-    <div class="container"><button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#signInModal">Login</button></div>
-    <div class="container"><button type="button" class="btn btn-primary btn-block">Login With facebook</button></div>
-    <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
+  <div v-if="token === ''">
+    <h1><span><i class="fas fa-clipboard-list"></i></span> DoDo</h1>
+    <p>Do what you should Do with DoDO!</p>
+    <div class="jumbotron">
+      <div class="container"><button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#signUpModal">Sign Up</button></div>
+      <div class="container"><button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#signInModal">Login</button></div>
+      <!-- <div class="container"><button type="button" id="fbbutton" class="fb-login-button btn-block" scope="public_profile,email" onlogin="checkLoginState();">Login With facebook</button></div> -->
+      <div class="container fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
+    </div>
   </div>
+  <home v-if="token !== ''"></home>
   <!-- signup -->
   <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -83,8 +86,12 @@
 </template>
 
 <script>
+import Home from '@/components/Home'
 export default {
   name: 'Landing',
+  components: {
+    Home
+  },
   data () {
     return {
       objNewuser: {
@@ -103,16 +110,19 @@ export default {
       this.$store.dispatch('signUp', this.objNewuser)
     },
     signInButton: function () {
-      this.$store.dispatch('signIn', this.objUser).then(() => {
-        this.$router.push({path: '/home'})
-      })
+      this.$store.dispatch('signIn', this.objUser)
+    }
+  },
+  computed: {
+    token: function () {
+      return this.$store.getters.getActiveUser.token
     }
   }
 
 }
 </script>
 
-<style>
+<style scoped>
 .container{
   margin-top: 10px;
   max-width: 400px;
@@ -130,4 +140,12 @@ button{
   background: rgba(135, 206, 235, 0.5)
 }
 
+.fb-login-button {
+  height: 100% !important;
+  width: 100% !important;
+}
+#fbbutton{
+  height: 100% !important;
+  width: 100% !important;
+}
 </style>

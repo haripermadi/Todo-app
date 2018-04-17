@@ -9,12 +9,6 @@ import VeeValidate from 'vee-validate'
 Vue.config.productionTip = false
 Vue.use(VeeValidate)
 
-// VeeValidate.Validator.extend('verify_password', {
-//   getMessage: field => `The password must be at least 6 character and contain at least:1 lowercase letter, 1 number, and one special character`,
-//   validate: value => {
-//     return /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{6,}$/.test(value)
-//   }
-// })
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

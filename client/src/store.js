@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 Vue.use(Vuex)
 
@@ -50,9 +51,22 @@ const store = new Vuex.Store({
         }
       }).then(response => {
         console.log('respon signup', response)
-        // document.querySelectorAll('#signInModal').modal('show')
+        swal(
+          'Welcome!',
+          'Sign Up success!',
+          'success'
+        )
+        localStorage.setItem('userId', response.data.data.id)
+        localStorage.setItem('token', response.data.data.token)
+        localStorage.setItem('name', response.data.data.name)
+        location.reload()
       }).catch(error => {
         console.log(error.message)
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        })
       })
     },
     signIn: function (context, payload) {
@@ -65,10 +79,21 @@ const store = new Vuex.Store({
         }
       }).then(response => {
         console.log('signin', response)
+        swal(
+          'Welcome!',
+          'Login success!',
+          'success'
+        )
         localStorage.setItem('userId', response.data.data.id)
         localStorage.setItem('token', response.data.data.token)
         localStorage.setItem('name', response.data.data.name)
+        location.reload()
       }).catch(error => {
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        })
         console.log(error)
       })
     },
@@ -88,12 +113,27 @@ const store = new Vuex.Store({
           }
         }).then(function (response) {
           console.log('respon gettodo', response)
+          swal(
+            'Success!',
+            'Add new todo success!',
+            'success'
+          )
           context.commit('addTodo', response.data.todo)
         }).catch(function (err) {
           console.log(err)
+          swal({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!'
+          })
         })
       } else {
-        alert('Login first!')
+        // alert('Login first!')
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Login first!!'
+        })
       }
     },
     showAllTodo: function (context, payload) {
@@ -119,9 +159,20 @@ const store = new Vuex.Store({
         }
       }).then(function (response) {
         console.log('respon delete todo', response)
-        context.dispatch('showAllTodo')
+        swal(
+          'Success!',
+          'todo removed!',
+          'success'
+        ).then(() => {
+          context.dispatch('showAllTodo')
+        })
       }).catch(function (err) {
         console.log(err)
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        })
       })
     },
     completedTodo: function (context, payload) {
@@ -134,9 +185,19 @@ const store = new Vuex.Store({
         data: payload
       }).then(function (response) {
         console.log('respon completetodo', JSON.stringify(response))
+        swal(
+          'Good Job!',
+          'Todo completed!',
+          'success'
+        )
         context.dispatch('showAllTodo')
       }).catch(function (err) {
         console.log(err)
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        })
       })
     },
     uncompleteTodo: function (context, payload) {
@@ -149,9 +210,19 @@ const store = new Vuex.Store({
         data: payload
       }).then(function (response) {
         console.log('respon uncompletetodo', response)
+        swal(
+          'Ok!',
+          'Todo uncomplete!',
+          'success'
+        )
         context.dispatch('showAllTodo')
       }).catch(function (err) {
         console.log(err)
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        })
       })
     },
     editTodo: function (context, payload) {
@@ -164,9 +235,19 @@ const store = new Vuex.Store({
         data: payload
       }).then(function (response) {
         console.log('respon edit todo', response)
+        swal(
+          'Success!',
+          'Todo updated!',
+          'success'
+        )
         context.dispatch('showAllTodo')
       }).catch(function (err) {
         console.log(err)
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        })
       })
     },
     getQuote: function (context, payload) {

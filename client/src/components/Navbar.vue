@@ -18,7 +18,7 @@ export default {
       let check = confirm('log out?')
       if (check === true) {
         localStorage.clear()
-        this.$router.push({path: '/'})
+        location.reload()
       }
     }
   }

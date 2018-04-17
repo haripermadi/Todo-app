@@ -6,12 +6,61 @@
     <title>DoDo</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+    
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script>
+        window.fbAsyncInit = function () {
+      FB.init({
+        appId: '1667126750049792',
+        cookie: true,
+        xfbml: true,
+        version: 'v2.8'
+      })
+      FB.AppEvents.logPageView()
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0]
+      if (d.getElementById(id)) { return }
+      js = d.createElement(s); js.id = id
+      js.src = 'https://connect.facebook.net/en_US/sdk.js'
+      fjs.parentNode.insertBefore(js, fjs)
+    }(document, 'script', 'facebook-jssdk'))
+
+    function checkLoginState () {
+      FB.getLoginStatus(function (response) {
+        console.log('respon login:', response)
+        statusChangeCallback(response)
+      })
+    }
+
+    function statusChangeCallback (response) {
+      if (response.status === 'connected') {
+        console.log('log in and authenticated', response)
+        axios({
+          method: 'post',
+          url: 'http://localhost:3000/users/fbsignin',
+          headers: {
+            fbtoken: response.authResponse.accessToken
+          }
+        }).then(resLogin => {
+          console.log('res server', resLogin)
+          localStorage.setItem('token', resLogin.data.data.token)
+          localStorage.setItem('userId', resLogin.data.data._id)
+          localStorage.setItem('name', resLogin.data.data.name)
+          location.reload()
+        })
+      } else {
+        console.log('not log in')
+      }
+    }
+    </script>
+    <!-- built files will be auto injected -->
   </body>
 </html>
