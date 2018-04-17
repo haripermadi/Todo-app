@@ -11,15 +11,30 @@
 </template>
 
 <script>
+import swal from 'sweetalert2'
 export default {
   name: 'Navbar',
   methods: {
     logOutButton: function () {
-      let check = confirm('log out?')
-      if (check === true) {
-        localStorage.clear()
-        location.reload()
-      }
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Log me out!'
+      }).then((result) => {
+        if (result.value) {
+          swal(
+            'Log out!',
+            'Your have been logged out',
+            'success'
+          )
+          localStorage.clear()
+          location.reload()
+        }
+      })
     }
   }
 }

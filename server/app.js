@@ -7,8 +7,8 @@ var cors = require('cors')
 require('dotenv').load();
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://localhost:27017/todoapp')
-
+// mongoose.connect('mongodb://localhost:27017/todoapp')
+mongoose.connect('mongodb://todoapp:todo123@ds247479.mlab.com:47479/todoapp')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const todo = require('./routes/todo');
