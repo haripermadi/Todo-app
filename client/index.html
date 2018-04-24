@@ -45,7 +45,7 @@
         console.log('log in and authenticated', response)
         axios({
           method: 'post',
-          url: 'http://localhost:3000/users/fbsignin',
+          url: 'http://server-todo.haripermadi.com/users/fbsignin',
           headers: {
             fbtoken: response.authResponse.accessToken
           }

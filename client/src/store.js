@@ -4,7 +4,7 @@ import axios from 'axios'
 import swal from 'sweetalert2'
 
 Vue.use(Vuex)
-// const serverUrl = 'http://server-todo.haripermadi.com/'
+const serverUrl = 'http://server-todo.haripermadi.com'
 const store = new Vuex.Store({
   state: {
     activeUser: {
@@ -43,7 +43,7 @@ const store = new Vuex.Store({
       console.log('signup payloda', payload)
       axios({
         method: 'post',
-        url: 'http://localhost:3000/users/signup',
+        url: `${serverUrl}/users/signup`,
         data: {
           name: payload.name,
           email: payload.email,
@@ -72,7 +72,7 @@ const store = new Vuex.Store({
     signIn: function (context, payload) {
       axios({
         method: 'post',
-        url: 'http://localhost:3000/users/signin',
+        url: `${serverUrl}/users/signin`,
         data: {
           email: payload.email,
           password: payload.password
@@ -103,7 +103,7 @@ const store = new Vuex.Store({
       if (token) {
         axios({
           method: 'post',
-          url: 'http://localhost:3000/todo',
+          url: `${serverUrl}/todo`,
           headers: {
             id: context.state.activeUser.userId,
             token: token
@@ -139,7 +139,7 @@ const store = new Vuex.Store({
     showAllTodo: function (context, payload) {
       axios({
         method: 'get',
-        url: 'http://localhost:3000/todo/' + context.state.activeUser.userId,
+        url: `${serverUrl}/todo/` + context.state.activeUser.userId,
         headers: {
           token: context.state.activeUser.token
         }
@@ -153,7 +153,7 @@ const store = new Vuex.Store({
     deleteTodo: function (context, payload) {
       axios({
         method: 'delete',
-        url: `http://localhost:3000/todo/${payload._id}`,
+        url: `${serverUrl}/todo/${payload._id}`,
         headers: {
           token: context.state.activeUser.token
         }
@@ -178,7 +178,7 @@ const store = new Vuex.Store({
     completedTodo: function (context, payload) {
       axios({
         method: 'put',
-        url: `http://localhost:3000/todo/completed/${payload._id}`,
+        url: `${serverUrl}/todo/completed/${payload._id}`,
         headers: {
           token: context.state.activeUser.token
         },
@@ -203,7 +203,7 @@ const store = new Vuex.Store({
     uncompleteTodo: function (context, payload) {
       axios({
         method: 'put',
-        url: `http://localhost:3000/todo/uncompleted/${payload._id}`,
+        url: `${serverUrl}/todo/uncompleted/${payload._id}`,
         headers: {
           token: context.state.activeUser.token
         },
@@ -228,7 +228,7 @@ const store = new Vuex.Store({
     editTodo: function (context, payload) {
       axios({
         method: 'put',
-        url: `http://localhost:3000/todo/${payload._id}`,
+        url: `${serverUrl}/todo/${payload._id}`,
         headers: {
           token: context.state.activeUser.token
         },
