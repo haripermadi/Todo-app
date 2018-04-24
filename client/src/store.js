@@ -4,7 +4,7 @@ import axios from 'axios'
 import swal from 'sweetalert2'
 
 Vue.use(Vuex)
-const serverUrl = 'http://server-todo.haripermadi.com'
+const serverUrl = 'https://server-todo.haripermadi.com'
 const store = new Vuex.Store({
   state: {
     activeUser: {
